@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.FlowPane?>
+
+<!--  Should you need a controller ...
+<VBox fx:controller="com.example.Controller"
+      xmlns:fx="http://javafx.com/fxml">-->
+
+<FlowPane orientation="vertical" hgap="25" vgap="0" xmlns:fx="http://javafx.com/fxml">
+	
+</FlowPane>

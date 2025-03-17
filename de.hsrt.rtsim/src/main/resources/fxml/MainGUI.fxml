@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.web.WebView?>
+<?import javafx.scene.layout.StackPane?>
+
+
+<VBox fx:id="appWindow" minHeight="600" minWidth="800" prefHeight="720.0" prefWidth="1280.0" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/20.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.hsrt.holbox.Gui.GuiController">
+
+   <children>
+      <HBox>
+         <children>
+         	<VBox>
+              	<Button styleClass="btn-inv" alignment="CENTER" contentDisplay="TOP"  minWidth="45" maxWidth="45" minHeight="45" maxHeight="45" mnemonicParsing="false"  text="" wrapText="true">
+                    <graphic>
+                    	<Label styleClass="icons-inv" onMouseClicked="#saveProject" text="&#xf0c7;" /> <!-- &#xf0c7; -->
+                	</graphic>
+                </Button>
+         	</VBox>
+         	<Separator />
+            <TabPane minHeight="120.0" minWidth="500.0" prefHeight="120.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" HBox.hgrow="ALWAYS">
+              <tabs>
+                  <Tab text="Project">
+                     <content>
+                        <HBox prefHeight="75.0" prefWidth="400.0">
+                           <children>
+                              <Button alignment="BOTTOM_CENTER" contentDisplay="TOP"  minWidth="70" maxHeight="75" mnemonicParsing="false" onMouseClicked="#newProject" text="New" wrapText="true">
+                                <graphic>
+                                    <Label styleClass="icons" text="&#xf15b;" />
+                                 </graphic>
+                              </Button>
+                              <Button alignment="BOTTOM_CENTER" contentDisplay="TOP"  minWidth="70" maxHeight="75" mnemonicParsing="false"  onMouseClicked="#openProject" text="Open" wrapText="true">
+                                 <graphic>
+                                    <Label styleClass="icons" text=" &#xf07c;" />
+                                 </graphic>
+                              </Button>
+                              <Button alignment="BOTTOM_CENTER" contentDisplay="TOP"  minWidth="70" maxHeight="75" mnemonicParsing="false"  onMouseClicked="#saveProjectAs" text="Save as..." wrapText="true">
+                                 <graphic>
+                                    <Label styleClass="icons" text="&#xf0c7;" />
+                                 </graphic>
+                              </Button>
+                           </children>
+                        </HBox>
+                     </content>
+                  </Tab>
+                <Tab text="Dataset">
+                     <content>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+							  <Button id="exportResults" alignment="BOTTOM_CENTER" contentDisplay="TOP" minWidth="70" maxHeight="70"  mnemonicParsing="false"  text="Save Results Dataset to Excel" wrapText="true" onMouseClicked="#saveResultDataset">
+                                 <graphic>
+                                    <Label styleClass="icons" text=" &#xf093;" /> <!-- &#xf093; -->
+                                 </graphic>
+                              </Button>
+                              <!--
+							  <Button id="zoomOutButton" alignment="BOTTOM_CENTER" contentDisplay="TOP"  minWidth="70" maxHeight="70"  mnemonicParsing="false"  text="Create Dataset" wrapText="true">
+                                 <graphic>
+                                    <Label styleClass="icons" text=" &#xf093;" />
+                                 </graphic>
+                              </Button>
+                              <Button id="beforeButton" alignment="BOTTOM_CENTER" contentDisplay="TOP" minWidth="70" maxHeight="70"  mnemonicParsing="false"  text="Import freq. data" wrapText="true">
+                                 <graphic>
+                                    <Label styleClass="icons" text=" &#xf093;" /> 
+                                 </graphic>
+                              </Button>
+                              <Button id="afterButton" alignment="BOTTOM_CENTER" contentDisplay="TOP" minWidth="70" maxHeight="70"  mnemonicParsing="false"  text="Import Wind Data" wrapText="true">
+                                 <graphic>
+                                    <Label styleClass="icons" text=" &#xf093;" /> 
+                                 </graphic>
+                              </Button> -->
+                           </children>
+                        </HBox>
+                     </content>
+                </Tab>
+              </tabs>
+            </TabPane>
+            <TabPane minWidth="480.0" prefHeight="100.0"  tabClosingPolicy="UNAVAILABLE">
+            	<tabs>
+            		<Tab text="Development Process" >
+            			<HBox>
+            				<Button  fx:id="prjButton" alignment="CENTER" styleClass="btn-process-selected" contentDisplay="TOP" minHeight="75" minWidth="90" mnemonicParsing="false" text="Project" wrapText="true" onMouseClicked="#setActivePrj">
+                                <graphic>
+                                    <Label styleClass="icons-ok" text="&#xf0eb;" />
+                                 </graphic>
+                            </Button>
+
+            				<Button fx:id="dataImportButton" alignment="CENTER" styleClass="btn-process" contentDisplay="TOP" minHeight="75" minWidth="90" mnemonicParsing="false" text="Resource" wrapText="true" onMouseClicked="#setActiveImport">
+                                <graphic>
+                                    <Label styleClass="icons-ok" text="&#xf6c4;" />
+                                 </graphic>
+                            </Button>
+
+            				<Button  fx:id="equipButton" alignment="CENTER" styleClass="btn-process" contentDisplay="TOP" minHeight="75" minWidth="100" mnemonicParsing="false" text="Equipment" wrapText="true" onMouseClicked="#setActiveEquip">
+                                <graphic>
+                                    <Label styleClass="icons-nok" text="&#xf5ba;" />
+                                 </graphic>
+                            </Button>
+
+            				<Button  fx:id="resultsButton" alignment="CENTER" styleClass="btn-process" contentDisplay="TOP" minHeight="75" minWidth="100" mnemonicParsing="false" text="Results" wrapText="true" onMouseClicked="#setActiveResults">
+                                <graphic>
+                                    <Label styleClass="icons-wait" text="&#xf1fe;" />
+                                 </graphic>
+                            </Button>
+
+            				<Button   fx:id="economicsButton" alignment="CENTER" styleClass="btn-process" contentDisplay="TOP" minHeight="75" minWidth="100" mnemonicParsing="false" text="Economics" wrapText="true" onMouseClicked="#setActiveEconomics">
+                                <graphic>
+                                    <Label styleClass="icons-wait" text="&#xf4d3;" />
+                                 </graphic>
+                            </Button>
+
+
+            			</HBox>
+            		</Tab>
+            	</tabs>
+            </TabPane>
+            <ImageView fitHeight="160.0" fitWidth="230.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+               <image>
+                  <!--<Image url="@/img/logo.png" />-->
+                  <Image url="@img/logo.png" />
+               </image>
+            </ImageView>
+         </children>
+      </HBox>
+      
+      <HBox fx:id="projectView" maxHeight="1080" prefHeight="1080">
+		<padding>
+			<Insets left="10" top="8" right="10"/>
+		</padding>
+      	<children>
+      		<VBox fx:id="projectSettingsView" prefHeight="1080">
+				<children>
+					<Label styleClass="heading" text="General project information" wrapText="true"/>
+				</children>
+      		</VBox>
+      		<WebView fx:id="map" prefHeight="559.0" prefWidth="775.0"></WebView>
+      	</children>
+      </HBox>
+      
+      <VBox fx:id="dataImportView" visible="false" maxHeight="1080" prefHeight="1080">
+		<padding>
+			<Insets left="10" top="8" right="10"/>
+		</padding>
+		<children>
+					<Label styleClass="heading" text="Dataset information" wrapText="true"/>
+		</children>
+      </VBox>
+      
+      <VBox fx:id="systemView" visible="false"  maxHeight="1080" prefHeight="1080">
+		<padding>
+			<Insets left="10" top="8" right="10"/>
+		</padding>
+		<children>
+					<Label styleClass="heading" text="Power System Description" wrapText="true"/>
+		</children>
+      </VBox>
+
+      <VBox fx:id="resultsView" visible="false"  maxHeight="1080" prefHeight="1080">
+		<padding>
+			<Insets left="10" top="8" right="10"/>
+		</padding>
+      	<children>
+			<Label styleClass="heading" text="Results" wrapText="true"/>
+      	</children>
+      </VBox>	
+      
+	  
+	  <TabPane fx:id="economicsView" minHeight="400.0" minWidth="500.0" prefHeight="1080.0" prefWidth="1920.0" tabClosingPolicy="UNAVAILABLE" HBox.hgrow="ALWAYS">
+              <tabs>
+                  <Tab text="Settings">
+                     <content>
+                        <HBox prefHeight="75.0" prefWidth="400.0">
+                           <children>
+                              <HBox fx:id="economicSettingsView">
+								</HBox>
+                           </children>
+                        </HBox>
+                     </content>
+                  </Tab>
+                <Tab text="Results">
+                     <content>
+						<HBox>
+                           <children>
+                              <VBox minWidth="600" prefWidth="800">
+								<padding>
+									<Insets left="10" top="8" right="10"/>
+								</padding>
+									<Label styleClass="heading" text="Economic calculations" wrapText="true"/>
+									
+									<Label  wrapText="true">
+										This section performs the economic sweep. This tries combinations of PV, Wind and Battery to get the best economic combination based on the parameters given in the ''Parameters'' Tab.
+										
+										The sweep is given in steps from 0 to n of the equipment nominal power given in this mask. Note: This is a very first approach and will be changed in the Beta version.
+										
+										The LCOE is given in USD/kWh
+									</Label>
+									
+									<GridPane hgap="10" vgap="10">
+										<!--
+										<Label text="Nominal power of PV"
+											GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+										<TextField  fx:id="pvPwrAtPk"
+											GridPane.columnIndex="1" GridPane.rowIndex="1" text = "1000.0" />	
+										<Label text="kWp"
+											GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+											
+										<Label text="Nominal power of Battery @ 2C"
+											GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+										<TextField  fx:id="battPwrAtPk"
+											GridPane.columnIndex="1" GridPane.rowIndex="2" text = "1000.0"/>	
+										<Label text="kW"
+											GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+											
+										<Label text="Nominal power of WindTurbine"
+											GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+										<TextField  fx:id="wtPwrAtPk"
+											GridPane.columnIndex="1" GridPane.rowIndex="3" text = "1250.0"/>	
+										<Label text="kW"
+											GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+											-->
+											
+										<Label text="Sweep PV from 0 to"
+											GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+										<TextField  fx:id="pvNumMax"
+											GridPane.columnIndex="1" GridPane.rowIndex="1" text = "1"/>	
+										
+										<!--
+										<Label text="Sweep WT from 0 to"
+											GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+										<TextField  fx:id="wtNumMax"
+											GridPane.columnIndex="1" GridPane.rowIndex="2" text = "1"/>
+											-->	
+										
+										<Label text="Sweep Batt from 0 to"
+											GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+										<TextField  fx:id="battNumMax"
+											GridPane.columnIndex="1" GridPane.rowIndex="3" text = "1"/>	
+
+									</GridPane>
+									<Button   fx:id="runEconomicsBtn" alignment="CENTER" contentDisplay="TOP" minHeight="75" minWidth="100" mnemonicParsing="false" text="Run Economics" wrapText="true" onMouseClicked="#runEconomics">
+                                <graphic>
+                                    <Label styleClass="icons-ok" text="&#xf4d3;" />
+                                 </graphic>
+                            </Button>
+								</VBox>
+								<HBox fx:id="economicsResultsView" minWidth="400" prefWidth="1920">
+								<Separator />
+								<GridPane hgap="10" vgap="10">
+									<!-- First Row -->
+									<Label text="Parameter"
+											GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+									<Label text="Baseline (100% DG)"
+											GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+									<Label text="Optimal Scenario"
+											GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+									<Label text="Savings"
+											GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+									<!-- Second Row -->
+									<Label text="Installed PV / WT"
+											GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+									<Label fx:id="pPvDG" text="--"
+											GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+									<Label fx:id="pPvOpt" text="-- kWp / -- kW"
+											GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+									<Label fx:id="pPvSavings" text=""
+											GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+									<!-- Second Row -->
+									<Label text="Installed Battery"
+											GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+									<Label fx:id="pBattDG" text="--"
+											GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+									<Label fx:id="pBattOpt" text="-- kWp / -- kW"
+											GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+									<Label fx:id="pBattSavings" text=""
+											GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+									<!-- Second Row -->
+									<Label text="Used Diesel Gensets"
+											GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+									<Label fx:id="pDgDG" text="--"
+											GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+									<Label fx:id="pDgOpt" text="-- kWp / -- kW"
+											GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+									<Label fx:id="pDgSavings" text=""
+											GridPane.columnIndex="3" GridPane.rowIndex="3"/>
+									<!-- LOAD ENERGY -->
+									<Label text="Load"
+											GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+									<Label fx:id="ldEgyDG" text="-- $/kWh"
+											GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+									<Label fx:id="ldEgyOpt" text="-- $/kWh"
+											GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+									<Label fx:id="ldEgySavings" text=""
+											GridPane.columnIndex="3" GridPane.rowIndex="4"/>
+									<!-- PV ENERGY -->
+									<Label text="Produced Energy PV"
+											GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+									<Label fx:id="pvEgyDG" text="-- $/kWh"
+											GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+									<Label fx:id="pvEgyOpt" text="-- $/kWh"
+											GridPane.columnIndex="2" GridPane.rowIndex="5"/>
+									<Label fx:id="pvEgySavings" text=""
+											GridPane.columnIndex="3" GridPane.rowIndex="5"/>
+									<!-- WT ENERGY -->
+									<Label text="Produced Energy WT"
+											GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+									<Label fx:id="wtEgyDG" text="-- $/kWh"
+											GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+									<Label fx:id="wtEgyOpt" text="-- $/kWh"
+											GridPane.columnIndex="2" GridPane.rowIndex="6"/>
+									<Label fx:id="wtEgySavings" text=""
+											GridPane.columnIndex="3" GridPane.rowIndex="6"/>
+									<!-- DG ENERGY -->
+									<Label text="Produced Energy DG"
+											GridPane.columnIndex="0" GridPane.rowIndex="7"/>
+									<Label fx:id="dgEgyDG" text="-- $/kWh"
+											GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+									<Label fx:id="dgEgyOpt" text="-- $/kWh"
+											GridPane.columnIndex="2" GridPane.rowIndex="7"/>
+									<Label fx:id="dgEgySavings" text=""
+											GridPane.columnIndex="3" GridPane.rowIndex="7"/>
+									<!-- FUEL CONSUMPTION -->
+									<Label text="Fuel Consumption"
+											GridPane.columnIndex="0" GridPane.rowIndex="8"/>
+									<Label fx:id="fuelVolDG" text="-- $/kWh"
+											GridPane.columnIndex="1" GridPane.rowIndex="8"/>
+									<Label fx:id="fuelVolOpt" text="-- $/kWh"
+											GridPane.columnIndex="2" GridPane.rowIndex="8"/>
+									<Label fx:id="fuelVolSavings" text="-- %"
+											GridPane.columnIndex="3" GridPane.rowIndex="8"/>
+									<!-- RUNNING HOURS -->
+									<Label text="Total running hours (all gensets)"
+											GridPane.columnIndex="0" GridPane.rowIndex="9"/>
+									<Label fx:id="dgTmDG" text="-- $/kWh"
+											GridPane.columnIndex="1" GridPane.rowIndex="9"/>
+									<Label fx:id="dgTmOpt" text="-- $/kWh"
+											GridPane.columnIndex="2" GridPane.rowIndex="9"/>
+									<Label fx:id="dgTmSavings" text="-- %"
+											GridPane.columnIndex="3" GridPane.rowIndex="9"/>
+									<!-- RF -->
+									<Label text="Renewable fraction"
+											GridPane.columnIndex="0" GridPane.rowIndex="10"/>
+									<Label fx:id="rfDG" text="-- $/kWh"
+											GridPane.columnIndex="1" GridPane.rowIndex="10"/>
+									<Label fx:id="rfOpt" text="-- $/kWh"
+											GridPane.columnIndex="2" GridPane.rowIndex="10"/>
+									<Label fx:id="rfSavings" text=""
+											GridPane.columnIndex="3" GridPane.rowIndex="10"/>
+									
+									<!-- LCOE -->
+									<Label text="LCOE"
+											GridPane.columnIndex="0" GridPane.rowIndex="11"/>
+									<Label fx:id="lcoeDG" text="-- $/kWh"
+											GridPane.columnIndex="1" GridPane.rowIndex="11"/>
+									<Label fx:id="lcoeOpt" text="-- $/kWh"
+											GridPane.columnIndex="2" GridPane.rowIndex="11"/>
+									<Label fx:id="lcoeSavings" text="-- %"
+											GridPane.columnIndex="3" GridPane.rowIndex="11"/>
+											
+									<Label text="Annual electricity costs"
+											GridPane.columnIndex="0" GridPane.rowIndex="12"/>
+									<Label fx:id="costDG" text="-- $/kWh"
+											GridPane.columnIndex="1" GridPane.rowIndex="12"/>
+									<Label fx:id="costOpt" text="-- $/kWh"
+											GridPane.columnIndex="2" GridPane.rowIndex="12"/>
+									<Label fx:id="costSavings" text="-- %"
+											GridPane.columnIndex="3" GridPane.rowIndex="12"/>
+
+								</GridPane>
+								
+								</HBox>
+                           </children>
+                        </HBox>
+                        
+                     </content>
+                </Tab>
+              </tabs>
+            </TabPane>
+      
+      <HBox minHeight="100.0" prefHeight="100.0" fx:id="logsView" style="-fx-background-color: #DCDCDC;">
+      	<children>
+      		<HBox fx:id="logsView">
+				<TextArea fx:id="logs" prefWidth="800.0"/>
+      		</HBox>
+      	</children>
+      </HBox>
+      
+	</children>
+	
+</VBox>

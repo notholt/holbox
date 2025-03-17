@@ -1,0 +1,229 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 01.06.2018, 16:47:36
+    Author     : notholt
+*/
+
+
+
+@font-face {
+    font-family: 'Source Sans Pro Light';
+    src: url("font/SourceSansPro-Light.ttf");
+}
+
+@font-face {
+    font-family: 'Source Sans Pro Regular';
+    src: url('font/SourceSansPro-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Source Sans Pro SemiBold';
+    src: url('font/SourceSansPro-SemiBold.ttf');
+}
+
+@font-face {
+    font-family: 'Font Awesome 5 Free Regular';
+    src: url('font/FontAwesome5Free-Regular-400.otf');
+}
+
+
+@font-face {
+    font-family: 'Font Awesome 5 Free Solid';
+    src: url('font/FontAwesome5Free-Solid-900.otf');
+}
+
+
+
+.root { -fx-font-family: "Source Sans Pro Light";     
+       -fx-font-size: 18px;
+       -fx-font-smoothing-type: lcd;
+       // Colors
+       -primary-color:#0076bd;
+       -primary-color-select:#4a96cd;
+       -ci-yellow: #ffe163;
+       -ok-color: #54ad4d;
+       -nok-color: #cd0529;
+       -wait-color: #c6c7c8;
+       -btn-front-color: -primary-color;
+       -icon-font-s: 'Font Awesome 5 Free Solid';
+
+       }
+
+.parameter-pane {
+	-fx-padding: 10 10 10 10;
+	
+}
+
+.tab .tab-label {-fx-font-family: 'Source Sans Pro SemiBold';
+                 -fx-font-size: 15px;}
+
+.tab:selected .tab-label { 
+    -fx-font-family: 'Source Sans Pro SemiBold';
+    -fx-font-size: 15px;
+    -fx-text-fill: #ffffff;
+}
+
+.tab {
+	/*-fx-background-insets: 0 0 0 0;*/
+	-fx-background-radius: 0 0 0 0;
+	-fx-padding: 0 10 0 10;
+}
+
+.tab-pane:top *.tab-header-area {
+	-fx-padding: 0 0 0 0;
+}
+
+.tab:selected {
+	-fx-background-color: -primary-color;
+	
+}
+
+.btn-inv{
+	-fx-background-color: -primary-color;
+}
+
+.btn-process{
+	-fx-background-color: transparent;
+}
+
+.btn-process-selected{
+	-fx-background-color: white;
+	-fx-background-radius: 10 10 10 10;
+}
+
+.btn-inv:hover{
+	-fx-background-color: -primary-color-select;
+}
+
+
+.icons-inv{
+    -fx-font-family: 'Font Awesome 5 Free Solid'; 
+    -fx-font-size: 20.0;
+    -fx-text-fill: white;
+    }
+    
+
+#navigation{
+    -fx-font-family: 'Font Awesome 5 Free Regular'; 
+    -fx-font-size: 20px;
+    /*-fx-text-fill: #991100;*/
+    }
+
+.icons{
+    -fx-font-family: 'Font Awesome 5 Free Solid'; 
+    -fx-font-size: 32.0;
+    -fx-text-fill: -btn-front-color;
+    }
+
+    
+.iconr{
+    -fx-font-family: "Font Awesome 5 Free Solid"; 
+    -fx-font-size: 32.0;
+    -fx-text-fill: -btn-front-color;
+    }
+
+.icons-ok{
+    -fx-font-family: "Font Awesome 5 Free Solid"; 
+    -fx-font-size: 32.0;
+    -fx-text-fill: -ok-color;
+    }
+    
+.icons-nok{
+    -fx-font-family: "Font Awesome 5 Free Solid"; 
+    -fx-font-size: 32.0;
+    -fx-text-fill: -nok-color;
+    }
+    
+.icons-wait{
+    -fx-font-family: "Font Awesome 5 Free Solid"; 
+    -fx-font-size: 32.0;
+    -fx-text-fill: -wait-color;
+    }        
+    
+ .heading{
+    -fx-font-family: "Source Sans Pro SemiBold";
+    -fx-font-size: 19pt;
+    }
+
+ #labelTitle{
+    -fx-font-family: "Source Sans Pro SemiBold";
+    -fx-font-size: 19pt;
+    }
+    
+ #ScenarioSimButton
+ {
+    -fx-font-family: "Source Sans Pro Light";
+    -fx-font-size: 9pt;
+    }
+    
+  #labelFootnotesize{
+    -fx-font-family: "Source Sans Pro Light";
+    -fx-font-size: 10pt;
+    }
+    
+  #labelSubtitle{
+    -fx-font-family: "Source Sans Pro SemiBold";
+    -fx-font-size: 15pt;
+    -fx-text-fill: #555555;
+    }
+  
+    
+    
+  .default.chart-series-line {    
+    -fx-stroke-width: 2px;
+    -fx-effect: null;
+}
+
+/*
+.default-color0.chart-series-line
+{    
+    -fx-stroke-width: 1px;
+    -fx-stroke: #555555;
+    -fx-stroke-dash-array: 2 6 2 6;
+}
+
+
+.chart-legend{
+    -fx-translate-y: -65px;
+    -fx-translate-x: -0px;
+    -fx-font-size: 10pt;
+}*/
+
+.chart .chart-content{
+    -fx-padding: 5 5 5 8;
+}
+
+.text-field {
+    -fx-padding: 1 4 1 4;
+    -fx-border-insets: 1 4 1 4;
+}
+
+.combo-box-base {
+    -fx-padding: -1 -5 -1 -5;
+    -fx-border-insets: -1 -5 -1 -5;
+}
+
+.text-field:focused {
+    -fx-background-color: #fcffe0;
+}
+
+.chart-legend-item 
+{
+    -fx-font-size: 10px;
+}
+.chart-legend-item-symbol 
+{
+    -fx-shape: "M0 -3.5 v7 l 4 -3.5z";
+}
+
+.axis-label {
+  -fx-font-size: 0.8em;
+}
+
+.axis{
+    -fx-tick-label-font-size:0.75em;
+    }

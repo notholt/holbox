@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>User object example for mxGraph</title>
+
+	<!-- Sets the basepath for the library if not in same directory -->
+	<script type="text/javascript">
+		//mxBasePath = '../src';
+	</script>
+
+	<!-- Loads and initializes the library -->
+	<script type="text/javascript" src="mxClient.js"></script>
+
+	<!-- Example code -->
+	<script type="text/javascript">
+		var doc = mxUtils.createXmlDocument();
+		var graph;
+		var parent;
+		var debug;
+		
+		
+		// Overridden to define per-shape connection points
+		mxGraph.prototype.getAllConnectionConstraints = function(terminal, source)
+		{
+			if (terminal != null && terminal.shape != null)
+			{
+				if (terminal.shape.stencil != null)
+				{
+					if (terminal.shape.stencil.constraints != null)
+					{
+						return terminal.shape.stencil.constraints;
+					}
+				}
+				else if (terminal.shape.constraints != null)
+				{
+					return terminal.shape.constraints;
+				}
+			}
+	
+			return null;
+		};
+	
+		// Defines the default constraints for all shapes
+		mxShape.prototype.constraints = [new mxConnectionConstraint(new mxPoint(0.25, 0), true),
+										 new mxConnectionConstraint(new mxPoint(0.5, 0), true),
+										 new mxConnectionConstraint(new mxPoint(0.75, 0), true),
+		        	              		 //new mxConnectionConstraint(new mxPoint(0, 0.25), true),
+		        	              		 //new mxConnectionConstraint(new mxPoint(0, 0.5), true),
+		        	              		 //new mxConnectionConstraint(new mxPoint(0, 0.75), true),
+		        	            		 //new mxConnectionConstraint(new mxPoint(1, 0.25), true),
+		        	            		 //new mxConnectionConstraint(new mxPoint(1, 0.5), true),
+		        	            		 //new mxConnectionConstraint(new mxPoint(1, 0.75), true),
+		        	            		 new mxConnectionConstraint(new mxPoint(0.25, 1), true),
+		        	            		 new mxConnectionConstraint(new mxPoint(0.5, 1), true),
+		        	            		 new mxConnectionConstraint(new mxPoint(0.75, 1), true)];
+		
+		// Edges have no connection points
+		mxPolyline.prototype.constraints = null;
+		
+		
+		// Program starts here. Creates a sample graph in the
+		// DOM node with the specified ID. This function is invoked
+		// from the onLoad event handler of the document (see below).
+		function main(container)
+		{
+			// Checks if the browser is supported
+			if (!mxClient.isBrowserSupported())
+			{
+				// Displays an error message if the browser is not supported.
+				mxUtils.error('Browser is not supported!', 200, false);
+			}
+			else
+			{
+				// Note that these XML nodes will be enclosing the
+				// mxCell nodes for the model cells in the output
+				//var doc = mxUtils.createXmlDocument();
+
+				var slack = doc.createElement('Bus');
+				slack.setAttribute('busNo', '0');
+				slack.setAttribute('name', 'PCC');
+
+				// Disables the built-in context menu
+				mxEvent.disableContextMenu(container);
+
+				
+
+				var relation = doc.createElement('Line');
+				relation.setAttribute('Imax', '15A');
+				
+				// Creates the graph inside the given container
+				graph = new mxGraph(container);
+				graph.setConnectable(true);
+
+				// Optional disabling of sizing
+				graph.setCellsResizable(false);
+				
+				// Configures the graph contains to resize and
+				// add a border at the bottom, right
+				graph.setResizeContainer(true);
+				graph.minimumContainerSize = new mxRectangle(0, 0, 500, 380);
+				graph.setBorder(60);
+				
+				// Stops editing on enter key, handles escape
+				new mxKeyHandler(graph);
+
+				// Overrides method to disallow edge label editing
+				graph.isCellEditable = function(cell)
+				{
+					return !this.getModel().isEdge(cell);
+				};
+				
+				// Overrides method to provide a cell label in the display
+				graph.convertValueToString = function(cell)
+				{
+					if (mxUtils.isNode(cell.value))
+					{
+						if (cell.value.nodeName.toLowerCase() == 'Bus')
+						{
+							var busNo = cell.getAttribute('busNo', '');
+							var busName = cell.getAttribute('name', '');
+
+							if (lastName != null && lastName.length > 0)
+							{
+								return '[' + busNo + '] ' + busName;
+							}
+
+							return firstName;
+						}
+						else if (cell.value.nodeName.toLowerCase() == 'Line')
+						{
+							return cell.value.nodeName + ' (Since '
+									+  cell.getAttribute('since', '') + ')';
+						}
+
+					}
+
+					return '';
+				};
+
+				// Overrides method to store a cell label in the model
+				var cellLabelChanged = graph.cellLabelChanged;
+				graph.cellLabelChanged = function(cell, newValue, autoSize)
+				{
+					if (mxUtils.isNode(cell.value) &&
+						cell.value.nodeName.toLowerCase() == 'Bus')
+					{
+						var pos = newValue.indexOf(' ');
+
+						var firstName = (pos > 0) ? newValue.substring(0,
+								pos) : newValue;
+						var lastName = (pos > 0) ? newValue.substring(
+								pos + 1, newValue.length) : '';
+
+						// Clones the value for correct undo/redo
+						var elt = cell.value.cloneNode(true);
+
+						elt.setAttribute('busNo', firstName);
+						elt.setAttribute('name', lastName);
+
+						newValue = elt;
+						autoSize = true;
+					}
+					
+					cellLabelChanged.apply(this, arguments);
+				};
+
+				// Overrides method to create the editing value
+				var getEditingValue = graph.getEditingValue;
+				graph.getEditingValue = function(cell)
+				{
+					if (mxUtils.isNode(cell.value) &&
+						cell.value.nodeName.toLowerCase() == 'person')
+					{
+						var firstName = cell.getAttribute('firstName', '');
+						var lastName = cell.getAttribute('lastName', '');
+
+						return firstName + ' ' + lastName;
+					}
+				};
+
+				// Adds a special tooltip for edges
+				graph.setTooltips(true);
+				
+				var getTooltipForCell = graph.getTooltipForCell;
+				graph.getTooltipForCell = function(cell)
+				{
+					// Adds some relation details for edges
+					if (graph.getModel().isEdge(cell))
+					{
+						var src = this.getLabel(this.getModel().getTerminal(cell, true));
+						var trg = this.getLabel(this.getModel().getTerminal(cell, false));
+
+						return src + ' ' + cell.value.nodeName + ' ' +  trg;
+					}
+
+					return getTooltipForCell.apply(this, arguments);
+				};
+				
+				// Enables rubberband selection
+				new mxRubberband(graph);
+
+				// Adds an option to view the XML of the graph
+				/*document.body.appendChild(mxUtils.button('View XML', function()
+				{
+					var encoder = new mxCodec();
+					var node = encoder.encode(graph.getModel());
+					mxUtils.popup(mxUtils.getPrettyXml(node), true);
+				}));*/
+
+				// Changes the style for match the markup
+				// Creates the default style for vertices
+				var style = graph.getStylesheet().getDefaultVertexStyle();
+				style[mxConstants.STYLE_STROKECOLOR] = 'gray';
+				style[mxConstants.STYLE_ROUNDED] = true;
+				style[mxConstants.STYLE_SHADOW] = true;
+				style[mxConstants.STYLE_FILLCOLOR] = '#DFDFDF';
+				style[mxConstants.STYLE_GRADIENTCOLOR] = 'white';
+				style[mxConstants.STYLE_FONTCOLOR] = 'black';
+				style[mxConstants.STYLE_FONTSIZE] = '12';
+				style[mxConstants.STYLE_SPACING] = 4;
+		
+				// Creates the default style for edges
+				style = graph.getStylesheet().getDefaultEdgeStyle();
+				style[mxConstants.STYLE_STROKECOLOR] = '#0C0C0C';
+				style[mxConstants.STYLE_LABEL_BACKGROUNDCOLOR] = 'white';
+				//style[mxConstants.STYLE_EDGE] = mxEdgeStyle.ElbowConnector;
+				style[mxConstants.STYLE_EDGE] = mxEdgeStyle.TopToBottom;
+				style[mxConstants.STYLE_ROUNDED] = true;
+				style[mxConstants.STYLE_FONTCOLOR] = 'black';
+				style[mxConstants.STYLE_FONTSIZE] = '10';
+				style[mxConstants.STYLE_ENDARROW] = mxConstants.NONE;
+				style[mxConstants.STYLE_STARTARROW] = mxConstants.NONE;
+				
+				// Gets the default parent for inserting new cells. This
+				// is normally the first child of the root (ie. layer 0).
+				parent = graph.getDefaultParent();
+								
+				// Adds cells to the model in a single step
+				graph.getModel().beginUpdate();
+				try
+				{
+					var v1 = graph.insertVertex(parent, null, slack, 40, 40, 80, 10);
+					//var e1 = graph.insertEdge(parent, null, relation, slack, null);
+				}
+				finally
+				{
+					// Updates the display
+					graph.getModel().endUpdate();
+				}
+
+				// Implements a properties panel that uses
+				// mxCellAttributeChange to change properties
+				graph.getSelectionModel().addListener(mxEvent.CHANGE, function(sender, evt)
+				{
+					selectionChanged(graph);
+				});
+				
+				graph.addListener(mxEvent.CLICK, function(sender, evt){addElement(evt);});
+				
+				graph.addListener(mxEvent.CONNECT, function(sender, evt){addLine(evt);});
+
+				selectionChanged(graph);
+			}
+
+			/**
+			 * Updates the properties panel
+			 */
+			function selectionChanged(graph)
+			{
+				var div = document.getElementById('properties');
+
+				// Forces focusout in IE
+				graph.container.focus();
+
+				// Clears the DIV the non-DOM way
+				div.innerHTML = '';
+
+				// Gets the selection cell
+				var cell = graph.getSelectionCell();
+
+				if (cell == null)
+				{
+					mxUtils.writeln(div, 'Nothing selected.');
+				}
+				else
+				{
+					// Writes the title
+					var center = document.createElement('center');
+					
+					/*mxUtils.writeln(center, cell.value.nodeName + ' (' + cell.id + ')');
+					div.appendChild(center);
+					mxUtils.br(div);
+
+					// Creates the form from the attributes of the user object
+					var form = new mxForm();
+	
+					var attrs = cell.value.attributes;
+					
+					for (var i = 0; i < attrs.length; i++)
+					{
+						createTextField(graph, form, cell, attrs[i]);
+					}
+	
+					div.appendChild(form.getTable());
+					mxUtils.br(div);*/
+				}
+			}
+
+			/**
+			 * Creates the textfield for the given property.
+			 */
+			function createTextField(graph, form, cell, attribute)
+			{
+				var input = form.addText(attribute.nodeName + ':', attribute.nodeValue);
+
+				var applyHandler = function()
+				{
+					var newValue = input.value || '';
+					var oldValue = cell.getAttribute(attribute.nodeName, '');
+
+					if (newValue != oldValue)
+					{
+						graph.getModel().beginUpdate();
+                        
+                        try
+                        {
+                        	var edit = new mxCellAttributeChange(
+ 		                           cell, attribute.nodeName,
+ 		                           newValue);
+                           	graph.getModel().execute(edit);
+                           	graph.updateCellSize(cell);
+                        }
+                        finally
+                        {
+                            graph.getModel().endUpdate();
+                        }
+					}
+				}; 
+
+				mxEvent.addListener(input, 'keypress', function (evt)
+				{
+					// Needs to take shift into account for textareas
+					if (evt.keyCode == /*enter*/13 &&
+						!mxEvent.isShiftDown(evt))
+					{
+						input.blur();
+					}
+				});
+
+				if (mxClient.IS_IE)
+				{
+					mxEvent.addListener(input, 'focusout', applyHandler);
+				}
+				else
+				{
+					// Note: Known problem is the blurring of fields in
+					// Firefox by changing the selection, in which case
+					// no event is fired in FF and the change is lost.
+					// As a workaround you should use a local variable
+					// that stores the focused field and invoke blur
+					// explicitely where we do the graph.focus above.
+					mxEvent.addListener(input, 'blur', applyHandler);
+				}
+			}
+		};
+		
+		function addElement(evt)
+		{
+			debug = evt.properties.event;
+			if(evt.properties.event.shiftKey == true)
+			{
+				var bus = doc.createElement('Bus');
+					bus.setAttribute('busNo', '1');
+					bus.setAttribute('name', 'P');
+					
+				graph.getModel().beginUpdate();
+				try
+				{
+					console.log("Added new bus");
+					var v1 = graph.insertVertex(parent, null, bus, evt.properties.event.clientX, evt.properties.event.clientY, 80, 10);
+					window.sld.doIt();
+				}
+				finally
+				{
+					// Updates the display
+					graph.getModel().endUpdate();
+				}
+			}else if(evt.properties.event.altKey == true)
+			{
+				var gen = doc.createElement('Component');
+					gen.setAttribute('busNo', '1');
+					gen.setAttribute('name', 'P');
+					
+				graph.getModel().beginUpdate();
+				try
+				{
+					console.log("Added new component");
+					var v1 = graph.insertVertex(parent, null, gen, evt.properties.event.clientX, evt.properties.event.clientY, 28, 28);
+					window.sld.doIt();
+				}
+				finally
+				{
+					// Updates the display
+					graph.getModel().endUpdate();
+				}
+			}
+		};
+		
+
+	</script>
+</head>
+
+<!-- Page passes the container for the graph to the program -->
+<body onload="main(document.getElementById('graphContainer'))">
+	<table style="position:relative;">
+	<tr>
+		<td>
+			<div id="graphContainer"
+				style="border: solid 1px black;overflow:hidden;width:321px;height:241px;cursor:default;" onmouseclick="addElement(event);">
+			</div>
+		</td>
+		<td valign="top">
+			<div id="properties"
+				style="border: solid 1px black; padding: 10px;">
+			</div>
+		</td>
+	</tr>
+	</table>
+</body>
+</html>
